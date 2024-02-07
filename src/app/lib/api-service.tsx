@@ -43,6 +43,7 @@ function usePostNote({ onSuccess }: { onSuccess: () => void }) {
 
 function useNoteNotArchived() {
   const { data, refetch } = useQuery({
+    refetchInterval: 100,
     queryKey: ['not archived'],
     queryFn: async () => {
       const noteNotArchived = await axios.get(
@@ -53,7 +54,63 @@ function useNoteNotArchived() {
           },
         }
       );
-      return noteNotArchived.data;
+      return noteNotArchived.data.data;
+    },
+  });
+  return {
+    data,
+    refetch,
+  };
+}
+function useNoteButtonArchived({ onSuccess }: { onSuccess: () => void }) {
+  return useMutation({
+    mutationFn: async (note_id) => {
+      const noteArchivedResponse = await axios.post(
+        `https://notes-api.dicoding.dev/v1/notes/${note_id}/archive`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      return noteArchivedResponse.data;
+    },
+    onSuccess,
+  });
+}
+function useNoteButtonUnarchived({ onSuccess }: { onSuccess: () => void }) {
+  return useMutation({
+    mutationFn: async (note_id) => {
+      const noteUnArchiveResponse = await axios.post(
+        `https://notes-api.dicoding.dev/v1/notes/${note_id}/unarchive`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      return noteUnArchiveResponse.data;
+    },
+    onSuccess,
+  });
+}
+
+function useNoteArchived() {
+  const { data, refetch } = useQuery({
+    refetchInterval: 100,
+    queryKey: ['archived note'],
+    queryFn: async () => {
+      const noteArchivedResponse = await axios.get(
+        `https://notes-api.dicoding.dev/v1/notes/archived`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      return noteArchivedResponse.data.data;
     },
   });
   return {
@@ -77,4 +134,12 @@ function useDeleteNote({ onSuccess }: { onSuccess: () => void }) {
     onSuccess,
   });
 }
-export { useFetchUserLogin, usePostNote, useNoteNotArchived, useDeleteNote };
+export {
+  useFetchUserLogin,
+  usePostNote,
+  useNoteArchived,
+  useNoteNotArchived,
+  useNoteButtonArchived,
+  useNoteButtonUnarchived,
+  useDeleteNote,
+};
