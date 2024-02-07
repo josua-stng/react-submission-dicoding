@@ -34,7 +34,7 @@ export default function Signin() {
         className="flex flex-col justify-center border border-black p-5 mx-auto space-y-4 "
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-center">Sign up</h1>
+        <h1 className="text-center">Sign in</h1>
         <input
           type="email"
           placeholder="email"
